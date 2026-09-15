@@ -1,0 +1,4 @@
+﻿node_modules/
+%LocalAppData%/
+.env
+dist/

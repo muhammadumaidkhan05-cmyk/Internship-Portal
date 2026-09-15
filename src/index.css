@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --navy: #071426;
+  --navy-light: #0d213b;
+  --cyan: #22d3ee;
+  --red: #ef4444;
+  --glass: rgba(255, 255, 255, 0.07);
+  --border: rgba(255, 255, 255, 0.14);
+}
+
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(239, 68, 68, 0.12), transparent 28%),
+    radial-gradient(circle at 90% 20%, rgba(34, 211, 238, 0.13), transparent 30%),
+    linear-gradient(135deg, #071426, #0b1d35 55%, #101827);
+  color: #e5f2ff;
+  min-height: 100vh;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.glass-card {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.04)
+  );
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: 0.3s ease;
+}
+
+.glass-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ef4444, #a855f7, #22d3ee);
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(34, 211, 238, 0.5);
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.35),
+    0 0 25px rgba(34, 211, 238, 0.08);
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #ef4444, #c084fc, #22d3ee);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gradient-border {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#0b1d35, #0b1d35) padding-box,
+    linear-gradient(90deg, #ef4444, #a855f7, #22d3ee) border-box;
+}
+
+.glass-button {
+  background: linear-gradient(90deg, #ef4444, #a855f7, #22d3ee);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-weight: 600;
+  transition: 0.3s ease;
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.18);
+}
+
+.glass-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(239, 68, 68, 0.3);
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #071426;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#ef4444, #22d3ee);
+  border-radius: 10px;
+}
