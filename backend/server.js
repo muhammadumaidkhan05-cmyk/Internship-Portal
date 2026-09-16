@@ -22,6 +22,17 @@ const programManagerProfileRoutes =
   require("./routes/programManagerProfileRoutes");
 
 // ============================================================
+// SUPER ADMIN ROUTES
+// ============================================================
+
+const superAdminUsersRoutes = require("./routes/superAdmin/usersRoutes");
+const superAdminProgramsRoutes = require("./routes/superAdmin/programsRoutes");
+const superAdminAuditLogsRoutes = require("./routes/superAdmin/auditLogsRoutes");
+const superAdminNotificationsRoutes = require("./routes/superAdmin/notificationsRoutes");
+const superAdminPlatformSettingsRoutes = require("./routes/superAdmin/platformSettingsRoutes");
+const superAdminRolesMatrixRoutes = require("./routes/superAdmin/rolesMatrixRoutes");
+
+// ============================================================
 // PROJECT MANAGER ROUTES
 // ============================================================
 
@@ -134,6 +145,17 @@ app.use(
   "/api/program-manager-profile",
   programManagerProfileRoutes
 );
+
+// ============================================================
+// SUPER ADMIN API ROUTES
+// ============================================================
+
+app.use("/api/super-admin/users", superAdminUsersRoutes);
+app.use("/api/super-admin/programs", superAdminProgramsRoutes);
+app.use("/api/super-admin/audit-logs", superAdminAuditLogsRoutes);
+app.use("/api/super-admin/notifications", superAdminNotificationsRoutes);
+app.use("/api/super-admin/platform-settings", superAdminPlatformSettingsRoutes);
+app.use("/api/super-admin/roles-matrix", superAdminRolesMatrixRoutes);
 
 // ============================================================
 // PROJECT MANAGER API ROUTES

@@ -27,7 +27,7 @@ function Logout() {
 
   return (
     <div className="min-h-screen bg-[#071426] flex items-center justify-center px-4">
-      <div className="relative w-full max-w-md rounded-2xl p-[1px] bg-gradient-to-r from-red-500 via-blue-500 to-cyan-400 shadow-2xl">
+      <div className="relative w-full max-w-md rounded-2xl p-px bg-linear-to-r from-red-500 via-blue-500 to-cyan-400 shadow-2xl">
         <div className="rounded-2xl bg-[#111418] px-8 py-10 text-center">
 
           <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border border-green-500/20 bg-green-500/10">

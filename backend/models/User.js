@@ -30,7 +30,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: [
         "admin",
+        "super_admin",
         "program-manager",
+        "program_manager",
+        "project-manager",
+        "project_manager",
         "mentor",
         "intern",
       ],
@@ -39,7 +43,7 @@ const userSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["Active", "Inactive"],
+      enum: ["Active", "Inactive", "active", "inactive", "suspended"],
       default: "Active",
     },
 

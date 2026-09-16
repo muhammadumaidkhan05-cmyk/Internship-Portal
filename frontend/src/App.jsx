@@ -8,6 +8,9 @@ import {
   Navigate,
 } from "react-router-dom";
 
+import SignInPage from "./pages/super-admin/SignInPage";
+import { ProtectedRoute } from "./router/ProtectedRoute";
+
 // ============================================================
 // PROGRAM MANAGER
 // ============================================================
@@ -38,6 +41,20 @@ import ProjectManagerProfile from "./pages/projectManager/ProjectManagerProfile"
 import ProjectManagerLogout from "./pages/projectManager/Logout";
 
 // ============================================================
+// SUPER ADMIN
+// ============================================================
+
+import SuperAdminLayout from "./pages/super-admin/SuperAdminLayout";
+
+import SuperAdminDashboardPage from "./pages/super-admin/SuperAdminDashboardPage";
+import UsersPage from "./pages/super-admin/UsersPage";
+import ProgramsPage from "./pages/super-admin/ProgramsPage";
+import AuditPage from "./pages/super-admin/AuditPage";
+import NotificationsPage from "./pages/super-admin/NotificationsPage";
+import SettingsPage from "./pages/super-admin/SettingsPage";
+import ProfilePage from "./pages/super-admin/ProfilePage";
+
+// ============================================================
 // APP
 // ============================================================
 
@@ -54,11 +71,39 @@ function App() {
           path="/"
           element={
             <Navigate
-              to="/program-manager/dashboard"
+              to="/sign-in"
               replace
             />
           }
         />
+
+        {/* Sign In */}
+
+        <Route
+          path="/sign-in"
+          element={<SignInPage />}
+        />
+
+        {/* ======================================================
+            SUPER ADMIN
+        ====================================================== */}
+
+        <Route
+          path="/super-admin"
+          element={
+            <ProtectedRoute allowedRoles={["super_admin"]}>
+              <SuperAdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<SuperAdminDashboardPage />} />
+          <Route path="users" element={<UsersPage />} />
+          <Route path="programs" element={<ProgramsPage />} />
+          <Route path="audit" element={<AuditPage />} />
+          <Route path="notifications" element={<NotificationsPage />} />
+          <Route path="settings" element={<SettingsPage />} />
+          <Route path="profile" element={<ProfilePage />} />
+        </Route>
 
         {/* ======================================================
             PROGRAM MANAGER
@@ -284,7 +329,7 @@ function App() {
           path="*"
           element={
             <Navigate
-              to="/program-manager/dashboard"
+              to="/sign-in"
               replace
             />
           }
