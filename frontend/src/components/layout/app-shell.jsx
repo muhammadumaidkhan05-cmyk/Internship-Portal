@@ -1,11 +1,40 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Sidebar } from "./sidebar";
 import { Navbar } from "./navbar";
 import { useSignOut } from "../../api/useAuth";
 
+const COLLAPSED_KEY = "msn_sidebar_collapsed";
+
+function getInitialCollapsed() {
+  try {
+    return localStorage.getItem(COLLAPSED_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
 export function AppShell({ navItems, bottomItems, navbar, children }) {
+  // Mobile: open/close drawer
   const [open, setOpen] = useState(false);
+  // Desktop: collapse to icon rail — persisted across refreshes
+  const [collapsed, setCollapsed] = useState(getInitialCollapsed);
+
   const { mutate: signOut } = useSignOut();
+
+  const handleToggleCollapse = useCallback(() => {
+    setCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem(COLLAPSED_KEY, String(next));
+      } catch {
+        // ignore storage errors
+      }
+      return next;
+    });
+  }, []);
+
+  const handleCloseMobile = useCallback(() => setOpen(false), []);
+  const handleOpenMobile = useCallback(() => setOpen(true), []);
 
   return (
     <div className="flex min-h-screen bg-[#F3F6FB]">
@@ -13,12 +42,23 @@ export function AppShell({ navItems, bottomItems, navbar, children }) {
         navItems={navItems}
         bottomItems={bottomItems}
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={handleCloseMobile}
         activeMatchers={navItems.map((n) => n.href)}
         onLogout={() => signOut()}
+        collapsed={collapsed}
       />
 
-      <div className="flex min-w-0 flex-1 flex-col">
+      {/*
+        Main content area:
+        - Transitions width alongside the sidebar so content never overlaps.
+        - On mobile the sidebar is fixed/overlay so no offset needed (handled by lg: classes).
+      */}
+      <div
+        className={`
+          flex min-w-0 flex-1 flex-col
+          transition-[margin] duration-200 ease-out
+        `}
+      >
         <Navbar
           eyebrow={navbar.eyebrow}
           title={navbar.title}
@@ -30,7 +70,9 @@ export function AppShell({ navItems, bottomItems, navbar, children }) {
           searchPlaceholder={navbar.searchPlaceholder}
           notificationsHref={navbar.notificationsHref}
           rightSlot={navbar.rightSlot}
-          onOpenSidebar={() => setOpen(true)}
+          onOpenSidebar={handleOpenMobile}
+          sidebarCollapsed={collapsed}
+          onToggleCollapse={handleToggleCollapse}
         />
 
         <main className="flex-1 px-4 py-5 sm:px-6 sm:py-6">{children}</main>
