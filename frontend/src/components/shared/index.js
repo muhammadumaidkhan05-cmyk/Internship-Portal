@@ -15,6 +15,7 @@ export { PageHeader } from "./page-header";
 export { Skeleton, PageSkeleton, TableSkeleton } from "./skeleton";
 export { ToastContainer } from "./toast";
 export { CustomSelect } from "./custom-select";
+export { CustomDatePicker } from "./custom-date-picker";
 
 export {
   IconDashboard,

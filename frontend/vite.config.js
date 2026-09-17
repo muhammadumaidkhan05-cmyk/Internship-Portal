@@ -39,7 +39,7 @@ export default defineConfig({
           if (id.includes("node_modules/lucide-react")) {
             return "vendor-icons";
           }
-          if (id.includes("node_modules/react-helmet-async") || id.includes("node_modules/zod")) {
+          if (id.includes("node_modules/react-helmet-async") || id.includes("node_modules/zod") || id.includes("node_modules/react-datepicker") || id.includes("node_modules/date-fns")) {
             return "vendor-misc";
           }
         },

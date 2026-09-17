@@ -5,6 +5,7 @@ import {
   DataTable,
   PageHeader,
   CustomSelect,
+  CustomDatePicker,
 } from "../../components/shared";
 import { IconDownload } from "../../components/shared/icons";
 import { useAuditLogs } from "../../api";
@@ -210,22 +211,20 @@ export default function AuditPage() {
               <label className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.1em] text-[#64748B]">
                 From
               </label>
-              <input
-                type="date"
-                value={from}
-                onChange={(e) => updateFilter("from", e.target.value)}
-                className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-white px-3 text-sm text-[#172033] focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
+              <CustomDatePicker
+                selected={from}
+                onChange={(val) => updateFilter("from", val)}
+                placeholderText="Start date"
               />
             </div>
             <div>
               <label className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.1em] text-[#64748B]">
                 To
               </label>
-              <input
-                type="date"
-                value={to}
-                onChange={(e) => updateFilter("to", e.target.value)}
-                className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-white px-3 text-sm text-[#172033] focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
+              <CustomDatePicker
+                selected={to}
+                onChange={(val) => updateFilter("to", val)}
+                placeholderText="End date"
               />
             </div>
           </div>
