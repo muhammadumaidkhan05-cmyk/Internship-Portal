@@ -14,6 +14,7 @@ export { NotificationList } from "./notification-list";
 export { PageHeader } from "./page-header";
 export { Skeleton, PageSkeleton, TableSkeleton } from "./skeleton";
 export { ToastContainer } from "./toast";
+export { CustomSelect } from "./custom-select";
 
 export {
   IconDashboard,

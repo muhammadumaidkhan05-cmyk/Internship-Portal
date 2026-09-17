@@ -6,6 +6,7 @@ import {
   StatusBadge,
   statusToneFor,
   ConfirmModal,
+  CustomSelect,
 } from "../../components/shared";
 import {
   IconEdit,
@@ -342,35 +343,27 @@ export default function UsersPage() {
               <label className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.1em] text-[#64748B]">
                 Role
               </label>
-              <select
+              <CustomSelect
                 value={roleFilter}
-                onChange={(e) => updateFilter("role", e.target.value)}
-                className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-white px-3 text-sm text-[#172033] focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
-              >
-                <option value="all">All roles</option>
-                {ROLES.map((r) => (
-                  <option key={r} value={r}>
-                    {ROLE_LABELS[r]}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => updateFilter("role", val)}
+                options={[
+                  { label: "All roles", value: "all" },
+                  ...ROLES.map((r) => ({ label: ROLE_LABELS[r], value: r })),
+                ]}
+              />
             </div>
             <div>
               <label className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.1em] text-[#64748B]">
                 Status
               </label>
-              <select
+              <CustomSelect
                 value={statusFilter}
-                onChange={(e) => updateFilter("status", e.target.value)}
-                className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-white px-3 text-sm text-[#172033] focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
-              >
-                <option value="all">All statuses</option>
-                {USER_STATUSES.map((s) => (
-                  <option key={s} value={s}>
-                    {STATUS_LABEL[s] ?? s}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => updateFilter("status", val)}
+                options={[
+                  { label: "All statuses", value: "all" },
+                  ...USER_STATUSES.map((s) => ({ label: STATUS_LABEL[s] ?? s, value: s })),
+                ]}
+              />
             </div>
           </div>
         </div>

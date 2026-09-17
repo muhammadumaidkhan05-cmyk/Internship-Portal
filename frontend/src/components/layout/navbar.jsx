@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { IconBell, IconSearch, IconMenu } from "../shared/icons";
+import { GlobalSearch } from "./global-search";
 
 export function Navbar({
   eyebrow,
@@ -114,17 +115,7 @@ export function Navbar({
         </div>
 
         {/* Global search */}
-        <div className="relative w-full sm:max-w-xs shrink-0">
-          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]">
-            <IconSearch size={16} />
-          </span>
-          <input
-            type="search"
-            placeholder={searchPlaceholder}
-            aria-label="Search"
-            className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-white pl-9 pr-3 text-sm text-[#172033] placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
-          />
-        </div>
+        <GlobalSearch placeholder={searchPlaceholder} />
       </div>
     </header>
   );

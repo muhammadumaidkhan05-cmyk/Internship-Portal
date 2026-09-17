@@ -1,7 +1,11 @@
-import { useMemo, useCallback, useEffect, useRef } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { DataTable } from "../../components/shared";
+import {
+  DataTable,
+  PageHeader,
+  CustomSelect,
+} from "../../components/shared";
 import { IconDownload } from "../../components/shared/icons";
 import { useAuditLogs } from "../../api";
 import { apiClient } from "../../api/client";
@@ -22,25 +26,30 @@ export default function AuditPage() {
   const from = searchParams.get("from") || "";
   const to = searchParams.get("to") || "";
 
-  // Debounced user search — avoids a DB query per keystroke
+  const [userSearch, setUserSearch] = useState(user);
   const debounceRef = useRef(null);
 
-  const handleUserSearch = useCallback(
-    (value) => {
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      const next = new URLSearchParams(searchParams);
+      if (!userSearch.trim()) {
+        next.delete("user");
+      } else {
+        next.set("user", userSearch.trim());
+      }
+      next.set("page", "1");
+      setSearchParams(next);
+    }, 300);
+    return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
-      debounceRef.current = setTimeout(() => {
-        const next = new URLSearchParams(searchParams);
-        if (!value.trim()) {
-          next.delete("user");
-        } else {
-          next.set("user", value.trim());
-        }
-        next.set("page", "1");
-        setSearchParams(next);
-      }, 300);
-    },
-    [searchParams, setSearchParams],
-  );
+    };
+  }, [userSearch]);
+
+  // Sync local input when URL param changes externally (e.g. browser back)
+  useEffect(() => {
+    setUserSearch(user);
+  }, [user]);
 
   useEffect(() => {
     return () => {
@@ -173,30 +182,29 @@ export default function AuditPage() {
               <label className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.1em] text-[#64748B]">
                 User
               </label>
-              <input
-                type="search"
-                defaultValue={user}
-                onChange={(e) => handleUserSearch(e.target.value)}
-                placeholder="Search by user..."
+                <input
+                  type="search"
+                  value={userSearch}
+                  onChange={(e) => setUserSearch(e.target.value)}
+                  placeholder="Search by user..."
                 className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-white px-3 text-sm text-[#172033] placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
               />
             </div>
-            <div>
+            <div className="w-full sm:w-48">
               <label className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.1em] text-[#64748B]">
                 Action
               </label>
-              <select
+              <CustomSelect
                 value={action}
-                onChange={(e) => updateFilter("action", e.target.value)}
-                className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-white px-3 text-sm text-[#172033] focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
-              >
-                <option value="all">All actions</option>
-                {AUDIT_ACTIONS.map((auditAction) => (
-                  <option key={auditAction} value={auditAction}>
-                    {ACTION_LABEL[auditAction]}
-                  </option>
-                ))}
-              </select>
+                onChange={(val) => updateFilter("action", val)}
+                options={[
+                  { label: "All actions", value: "all" },
+                  ...AUDIT_ACTIONS.map((auditAction) => ({
+                    label: ACTION_LABEL[auditAction],
+                    value: auditAction,
+                  })),
+                ]}
+              />
             </div>
             <div>
               <label className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.1em] text-[#64748B]">

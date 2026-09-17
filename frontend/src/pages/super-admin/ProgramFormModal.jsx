@@ -1,4 +1,5 @@
 import { IconClose } from "../../components/shared/icons";
+import { CustomSelect } from "../../components/shared";
 import { PROGRAM_STATUSES } from "@msn/shared";
 import { STATUS_LABEL } from "../../lib/labels";
 
@@ -30,7 +31,7 @@ export function ProgramFormModal({
       className="fixed inset-0 z-50 grid place-items-center bg-black/40 px-4 py-8 animate-in fade-in duration-200"
     >
       <div className="flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-2xl animate-in fade-in zoom-in-95 slide-in-from-bottom-4 sm:slide-in-from-bottom-0 duration-200">
-        <div className="flex items-center justify-between border-b border-[#E2E8F0] bg-[#F8FAFC] px-5 py-4">
+        <div className="flex shrink-0 items-center justify-between border-b border-[#E2E8F0] bg-[#F8FAFC] px-5 py-4">
           <h3 className="text-sm font-semibold text-[#172033]">
             {isEditing ? "Edit Program" : "Create New Program"}
           </h3>
@@ -43,8 +44,9 @@ export function ProgramFormModal({
             <IconClose size={18} />
           </button>
         </div>
-        <form onSubmit={onSubmit} className="p-6">
-          <div className="space-y-4">
+        <form onSubmit={onSubmit} className="flex flex-col overflow-hidden">
+          <div className="flex-1 overflow-y-auto p-6 space-y-4">
+
             <div>
               <label className="mb-1 block text-sm font-semibold text-[#334155]">
                 Program Name *
@@ -116,27 +118,24 @@ export function ProgramFormModal({
               <label className="mb-1 block text-sm font-semibold text-[#334155]">
                 Status
               </label>
-              <select
+              <CustomSelect
                 value={formData.status}
-                onChange={(e) =>
-                  onFormDataChange((p) => ({ ...p, status: e.target.value }))
+                onChange={(val) =>
+                  onFormDataChange((p) => ({ ...p, status: val }))
                 }
-                className="w-full rounded-lg border border-[#E2E8F0] px-3 py-2 text-sm focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
-              >
-                {PROGRAM_STATUSES.map((s) => (
-                  <option key={s} value={s}>
-                    {STATUS_LABEL[s] ?? s}
-                  </option>
-                ))}
-              </select>
+                options={PROGRAM_STATUSES.map((s) => ({
+                  label: STATUS_LABEL[s] ?? s,
+                  value: s,
+                }))}
+              />
             </div>
           </div>
 
-          <div className="mt-8 flex items-center justify-end gap-3">
+          <div className="flex shrink-0 items-center justify-end gap-3 border-t border-[#E2E8F0] bg-[#F8FAFC] px-6 py-4">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg px-4 py-2 text-sm font-semibold text-[#475569] hover:bg-[#F1F5F9] transition-colors"
+              className="rounded-lg border border-[#E2E8F0] bg-white px-4 py-2 text-sm font-semibold text-[#172033] hover:bg-[#F8FAFC] transition-colors"
             >
               Cancel
             </button>
