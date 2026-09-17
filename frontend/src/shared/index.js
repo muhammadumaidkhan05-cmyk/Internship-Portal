@@ -10,8 +10,8 @@ export const ROLE_LABELS = {
   intern: "Intern",
 };
 
-// Status Enums
-export const USER_STATUSES = ["active", "inactive", "suspended"];
+// Status Enums — must match the User model enum (capitalized)
+export const USER_STATUSES = ["Active", "Inactive", "suspended"];
 
 export const PROGRAM_STATUSES = [
   "active",

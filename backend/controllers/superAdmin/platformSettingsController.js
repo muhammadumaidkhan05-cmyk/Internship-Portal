@@ -1,4 +1,5 @@
 const PlatformSetting = require("../../models/PlatformSetting");
+const AuditLog = require("../../models/AuditLog");
 
 exports.getSettings = async (req, res) => {
   try {
@@ -7,9 +8,19 @@ exports.getSettings = async (req, res) => {
       settings = new PlatformSetting();
       await settings.save();
     }
-    res.json({ ok: true, data: { id: settings._id, ...settings.toObject() } });
+    return res.json({
+      success: true,
+      data: {
+        id: settings._id,
+        platformName: settings.platformName,
+        supportEmail: settings.supportEmail,
+        maintenanceMode: settings.maintenanceMode,
+        sessionTimeoutMinutes: settings.sessionTimeoutMinutes,
+        allowSignups: settings.allowSignups,
+      },
+    });
   } catch (error) {
-    res.status(500).json({ ok: false, error: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };
 
@@ -17,20 +28,33 @@ exports.updateSettings = async (req, res) => {
   try {
     const updateData = req.body;
     let settings = await PlatformSetting.findOne();
-    
+
     if (settings) {
       settings = await PlatformSetting.findByIdAndUpdate(settings._id, updateData, { new: true });
     } else {
       settings = new PlatformSetting(updateData);
       await settings.save();
     }
-    
-    const AuditLog = require("../../models/AuditLog");
-    const audit = new AuditLog({ userName: req.user ? req.user.name : "System", action: "updated_settings" });
+
+    const audit = new AuditLog({
+      userName: req.user ? req.user.name : "Super Admin",
+      action: "updated_settings",
+    });
     await audit.save();
 
-    res.json({ ok: true, data: { id: settings._id, ...settings.toObject() }, message: "Settings updated successfully" });
+    return res.json({
+      success: true,
+      message: "Settings updated successfully.",
+      data: {
+        id: settings._id,
+        platformName: settings.platformName,
+        supportEmail: settings.supportEmail,
+        maintenanceMode: settings.maintenanceMode,
+        sessionTimeoutMinutes: settings.sessionTimeoutMinutes,
+        allowSignups: settings.allowSignups,
+      },
+    });
   } catch (error) {
-    res.status(500).json({ ok: false, error: error.message });
+    return res.status(500).json({ success: false, message: error.message });
   }
 };

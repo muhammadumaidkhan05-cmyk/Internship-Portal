@@ -30,7 +30,7 @@ export function useMarkNotificationRead() {
   return useMutation({
     mutationFn: async (id) => {
       const res = await apiClient(`/notifications/${id}/read`, {
-        method: "PATCH",
+        method: "POST",   // backend: POST /:id/read
       });
       return res.data;
     },
@@ -47,12 +47,19 @@ export function useMarkNotificationRead() {
         (old) => {
           if (!old) return [];
           return old.map((n) =>
-            n.id === Number(id) ? { ...n, isRead: true } : n,
+            n.id === id || String(n.id) === String(id)
+              ? { ...n, isRead: true }
+              : n,
           );
         },
       );
 
       return { previous };
+    },
+    onError: (_err, _id, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(queryKeys.notifications.all, context.previous);
+      }
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.notifications.all });
@@ -66,7 +73,7 @@ export function useMarkAllNotificationsRead() {
   return useMutation({
     mutationFn: async () => {
       await apiClient("/notifications/read-all", {
-        method: "PATCH",
+        method: "POST",   // backend: POST /read-all
       });
     },
     // Optimistic update

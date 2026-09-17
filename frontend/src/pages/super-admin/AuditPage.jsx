@@ -4,12 +4,14 @@ import { Helmet } from "react-helmet-async";
 import { DataTable } from "../../components/shared";
 import { IconDownload } from "../../components/shared/icons";
 import { useAuditLogs } from "../../api";
+import { apiClient } from "../../api/client";
 import { AUDIT_ACTIONS } from "@msn/shared";
 import {
   ACTION_LABEL,
   formatTimestamp,
   auditLogsToCsv,
 } from "../../lib/labels";
+
 
 export default function AuditPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -131,7 +133,6 @@ export default function AuditPage() {
       if (from) exportParams.set("from", from);
       if (to) exportParams.set("to", to);
 
-      const { apiClient } = await import("../../api/client");
       const res = await apiClient(`/api/super-admin/audit-logs?${exportParams.toString()}`);
       const allLogs = res?.data ?? logs; // fall back to current page if request fails
 

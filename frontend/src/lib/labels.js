@@ -11,9 +11,14 @@ export const ROLE_LABEL = {
 };
 
 export const STATUS_LABEL = {
+  // Capitalized — stored in DB as "Active" / "Inactive"
+  Active: "Active",
+  Inactive: "Inactive",
+  // Lowercase aliases for backwards compat
   active: "Active",
   inactive: "Inactive",
   suspended: "Suspended",
+  // Program statuses
   in_progress: "In Progress",
   completed: "Completed",
   archived: "Archived",

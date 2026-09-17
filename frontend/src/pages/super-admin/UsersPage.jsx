@@ -138,7 +138,9 @@ export default function UsersPage() {
 
   const handleToggleStatus = useCallback(
     (user) => {
-      const newStatus = user.status === "active" ? "inactive" : "active";
+      // DB stores "Active" / "Inactive" (capitalized) — compare case-insensitively
+      const isCurrentlyActive = user.status?.toLowerCase() === "active";
+      const newStatus = isCurrentlyActive ? "Inactive" : "Active";
       updateUser(
         { id: user.id, status: newStatus },
         {
@@ -268,7 +270,7 @@ export default function UsersPage() {
             >
               <IconEdit size={12} /> Edit
             </button>
-            {row.status === "active" ? (
+            {row.status?.toLowerCase() === "active" ? (
               <button
                 type="button"
                 aria-label={`Deactivate ${row.name}`}
