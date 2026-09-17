@@ -12,7 +12,6 @@ import {
   IconTrash,
   IconCheck,
   IconPlus,
-  IconClose,
 } from "../../components/shared/icons";
 import {
   useUsers,
@@ -23,6 +22,8 @@ import {
 import { showToast } from "../../api/client";
 import { ROLES, USER_STATUSES, ROLE_LABELS } from "@msn/shared";
 import { STATUS_LABEL, ROLE_LABEL } from "../../lib/labels";
+import { EditRoleModal, CreateUserModal } from "./UserModals";
+
 
 export default function UsersPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -238,8 +239,7 @@ export default function UsersPage() {
         key: "role",
         header: "Role",
         sortable: true,
-        cell: (row) =>
-          ROLE_LABEL[row.role] ?? ROLE_LABELS[row.role] ?? row.role,
+        cell: (row) => ROLE_LABEL[row.role] ?? row.role,
       },
       {
         key: "status",
@@ -428,142 +428,29 @@ export default function UsersPage() {
 
         {/* Edit role modal */}
         {editing && (
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label={`Edit role for ${editing.name}`}
-            className="fixed inset-0 z-50 grid place-items-center bg-black/40 px-4"
-          >
-            <div className="w-full max-w-md overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-2xl">
-              <div className="border-b border-[#E2E8F0] bg-[#F8FAFC] px-5 py-3">
-                <h3 className="text-sm font-semibold text-[#172033]">
-                  Edit Role — {editing.name}
-                </h3>
-              </div>
-              <div className="space-y-4 p-5">
-                <div>
-                  <label className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.1em] text-[#64748B]">
-                    Role
-                  </label>
-                  <select
-                    value={editRole}
-                    onChange={(e) => setEditRole(e.target.value)}
-                    className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-white px-3 text-sm text-[#172033] focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
-                  >
-                    {ROLES.map((r) => (
-                      <option key={r} value={r}>
-                        {ROLE_LABELS[r]}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-              <div className="flex items-center justify-end gap-2 border-t border-[#E2E8F0] bg-[#F8FAFC] px-5 py-3">
-                <button
-                  type="button"
-                  onClick={() => setEditing(null)}
-                  className="rounded-md border border-[#E2E8F0] bg-white px-3 py-1.5 text-xs font-semibold text-[#172033] hover:bg-[#F1F5F9]"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  disabled={isUpdating}
-                  onClick={handleSaveRole}
-                  className="rounded-md bg-[#2563EB] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#1D4ED8] disabled:opacity-50"
-                >
-                  {isUpdating ? "Saving..." : "Save changes"}
-                </button>
-              </div>
-            </div>
-          </div>
+          <EditRoleModal
+            user={editing}
+            role={editRole}
+            onRoleChange={setEditRole}
+            onSave={handleSaveRole}
+            onCancel={() => setEditing(null)}
+            isSaving={isUpdating}
+          />
         )}
 
         {/* Create User modal */}
         {showCreateModal && (
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Create new user"
-            className="fixed inset-0 z-50 grid place-items-center bg-black/40 px-4"
-          >
-            <div className="w-full max-w-md overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-2xl">
-              <div className="flex items-center justify-between border-b border-[#E2E8F0] bg-[#F8FAFC] px-5 py-3">
-                <h3 className="text-sm font-semibold text-[#172033]">
-                  Add New User
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => setShowCreateModal(false)}
-                  className="text-[#64748B] hover:text-[#172033]"
-                >
-                  <IconClose size={16} />
-                </button>
-              </div>
-              <form onSubmit={handleCreateUser}>
-                <div className="space-y-4 p-5">
-                  <div>
-                    <label className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.1em] text-[#64748B]">
-                      Full Name
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={newUserName}
-                      onChange={(e) => setNewUserName(e.target.value)}
-                      placeholder="e.g. Ayesha Malik"
-                      className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-white px-3 text-sm text-[#172033] focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.1em] text-[#64748B]">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      value={newUserEmail}
-                      onChange={(e) => setNewUserEmail(e.target.value)}
-                      placeholder="name@msn.example"
-                      className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-white px-3 text-sm text-[#172033] focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-[11px] font-semibold uppercase tracking-[0.1em] text-[#64748B]">
-                      Role
-                    </label>
-                    <select
-                      value={newUserRole}
-                      onChange={(e) => setNewUserRole(e.target.value)}
-                      className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-white px-3 text-sm text-[#172033] focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
-                    >
-                      {ROLES.map((r) => (
-                        <option key={r} value={r}>
-                          {ROLE_LABELS[r]}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-                <div className="flex items-center justify-end gap-2 border-t border-[#E2E8F0] bg-[#F8FAFC] px-5 py-3">
-                  <button
-                    type="button"
-                    onClick={() => setShowCreateModal(false)}
-                    className="rounded-md border border-[#E2E8F0] bg-white px-3 py-1.5 text-xs font-semibold text-[#172033] hover:bg-[#F1F5F9]"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isCreating}
-                    className="rounded-md bg-[#2563EB] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#1D4ED8] disabled:opacity-50"
-                  >
-                    {isCreating ? "Adding..." : "Add User"}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
+          <CreateUserModal
+            name={newUserName}
+            email={newUserEmail}
+            role={newUserRole}
+            onNameChange={setNewUserName}
+            onEmailChange={setNewUserEmail}
+            onRoleChange={setNewUserRole}
+            onSubmit={handleCreateUser}
+            onClose={() => setShowCreateModal(false)}
+            isCreating={isCreating}
+          />
         )}
 
         {/* Delete confirmation modal — replaces window.confirm() */}
@@ -583,3 +470,4 @@ export default function UsersPage() {
     </>
   );
 }
+

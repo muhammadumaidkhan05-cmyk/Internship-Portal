@@ -12,6 +12,21 @@ import {
 } from "../../components/shared/icons";
 import { useCurrentUser, useNotifications } from "../../api";
 
+// Defined outside component to avoid recreation on every render
+const NAV_ITEMS = [
+  { href: "/super-admin", label: "Dashboard", icon: IconDashboard },
+  { href: "/super-admin/users", label: "User & Role Management", icon: IconUsers },
+  { href: "/super-admin/programs", label: "Programs", icon: IconPrograms },
+  { href: "/super-admin/audit", label: "Security & Audit Logs", icon: IconShield },
+  { href: "/super-admin/notifications", label: "Notifications", icon: IconBell },
+  { href: "/super-admin/settings", label: "Settings", icon: IconSettings },
+];
+
+const BOTTOM_ITEMS = [
+  { href: "/super-admin/profile", label: "Profile", icon: IconProfile },
+  { href: "/sign-in", label: "Logout", icon: IconLogout },
+];
+
 export default function SuperAdminLayout() {
   const { data: user } = useCurrentUser();
   const { data: notifications } = useNotifications();
@@ -22,38 +37,8 @@ export default function SuperAdminLayout() {
 
   return (
     <AppShell
-      navItems={[
-        { href: "/super-admin", label: "Dashboard", icon: IconDashboard },
-        {
-          href: "/super-admin/users",
-          label: "User & Role Management",
-          icon: IconUsers,
-        },
-        {
-          href: "/super-admin/programs",
-          label: "Programs",
-          icon: IconPrograms,
-        },
-        {
-          href: "/super-admin/audit",
-          label: "Security & Audit Logs",
-          icon: IconShield,
-        },
-        {
-          href: "/super-admin/notifications",
-          label: "Notifications",
-          icon: IconBell,
-        },
-        {
-          href: "/super-admin/settings",
-          label: "Settings",
-          icon: IconSettings,
-        },
-      ]}
-      bottomItems={[
-        { href: "/super-admin/profile", label: "Profile", icon: IconProfile },
-        { href: "/sign-in", label: "Logout", icon: IconLogout },
-      ]}
+      navItems={NAV_ITEMS}
+      bottomItems={BOTTOM_ITEMS}
       navbar={{
         eyebrow: "SYSTEM MANAGEMENT",
         title: "Super Admin Dashboard",

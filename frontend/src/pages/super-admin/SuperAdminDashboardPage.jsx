@@ -50,12 +50,15 @@ export default function SuperAdminDashboardPage() {
   const kpis = useMemo(() => {
     const totalUsers = users.length;
     const distinctRoles = new Set(users.map((u) => u.role)).size;
-    const activeSessions = Math.max(1, Math.floor(totalUsers * 0.55));
+    const activeUsers = users.filter(
+      (u) => (u.status ?? "").toLowerCase() === "active",
+    ).length;
     return {
       totalUsers,
       distinctRoles,
-      activeSessions,
-      systemHealth: "OK",
+      activeUsers,
+      // NOTE: systemHealth is static until a real /health endpoint is available
+      systemHealth: "Nominal",
     };
   }, [users]);
 
@@ -193,15 +196,15 @@ export default function SuperAdminDashboardPage() {
 
           <KpiCard
             icon={IconClipboard}
-            value={loading ? "—" : kpis.activeSessions}
-            label="Active Sessions"
-            description="Live in the last 24h"
+            value={loading ? "—" : kpis.activeUsers}
+            label="Active Users"
+            description="Accounts with Active status"
             tone="cyan"
           />
 
           <KpiCard
             icon={IconHeartPulse}
-            value="OK"
+            value={kpis.systemHealth}
             label="System Health"
             description="All services nominal"
             tone="green"

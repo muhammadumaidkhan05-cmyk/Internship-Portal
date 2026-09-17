@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import { NotificationList } from "../../components/shared";
 import {
@@ -49,13 +49,6 @@ export default function NotificationsPage() {
     [notifications],
   );
 
-  const handleMarkRead = useCallback(
-    (id) => {
-      markRead(id);
-    },
-    [markRead],
-  );
-
   const handleMarkAllRead = useCallback(() => {
     markAllRead(undefined, {
       onSuccess: () => {
@@ -97,7 +90,7 @@ export default function NotificationsPage() {
           key={activeChip}
           items={items}
           chips={[]}
-          onMarkRead={handleMarkRead}
+          onMarkRead={markRead}
           toolbar={
             <button
               type="button"

@@ -8,8 +8,8 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import SignInPage from "./pages/super-admin/SignInPage";
 import { ProtectedRoute } from "./router/ProtectedRoute";
+import SignInPage from "./pages/super-admin/SignInPage";
 
 // ============================================================
 // PROGRAM MANAGER
@@ -25,6 +25,7 @@ import Notifications from "./pages/programManager/Notifications";
 import Profile from "./pages/programManager/Profile";
 import Logout from "./pages/programManager/Logout";
 import Mentors from "./pages/programManager/Mentors";
+import ProgramManagerLoggedOutPage from "./pages/programManager/LoggedOutPage";
 
 // ============================================================
 // PROJECT MANAGER
@@ -39,6 +40,7 @@ import ScrumReview from "./pages/projectManager/ScrumReview";
 import ProjectManagerNotifications from "./pages/projectManager/ProjectManagerNotifications";
 import ProjectManagerProfile from "./pages/projectManager/ProjectManagerProfile";
 import ProjectManagerLogout from "./pages/projectManager/Logout";
+import ProjectManagerLoggedOutPage from "./pages/projectManager/LoggedOutPage";
 
 // ============================================================
 // SUPER ADMIN
@@ -114,9 +116,11 @@ function App() {
         <Route
           path="/program-manager/dashboard"
           element={
-            <ProgramManagerLayout>
-              <ProgramManagerDashboard />
-            </ProgramManagerLayout>
+            <ProtectedRoute allowedRoles={["program-manager", "program_manager"]}>
+              <ProgramManagerLayout>
+                <ProgramManagerDashboard />
+              </ProgramManagerLayout>
+            </ProtectedRoute>
           }
         />
 
@@ -125,9 +129,11 @@ function App() {
         <Route
           path="/program-manager/cohorts"
           element={
-            <ProgramManagerLayout>
-              <Cohorts />
-            </ProgramManagerLayout>
+            <ProtectedRoute allowedRoles={["program-manager", "program_manager"]}>
+              <ProgramManagerLayout>
+                <Cohorts />
+              </ProgramManagerLayout>
+            </ProtectedRoute>
           }
         />
 
@@ -136,9 +142,11 @@ function App() {
         <Route
           path="/program-manager/mentors"
           element={
-            <ProgramManagerLayout>
-              <Mentors />
-            </ProgramManagerLayout>
+            <ProtectedRoute allowedRoles={["program-manager", "program_manager"]}>
+              <ProgramManagerLayout>
+                <Mentors />
+              </ProgramManagerLayout>
+            </ProtectedRoute>
           }
         />
 
@@ -147,9 +155,11 @@ function App() {
         <Route
           path="/program-manager/reports"
           element={
-            <ProgramManagerLayout>
-              <Reports />
-            </ProgramManagerLayout>
+            <ProtectedRoute allowedRoles={["program-manager", "program_manager"]}>
+              <ProgramManagerLayout>
+                <Reports />
+              </ProgramManagerLayout>
+            </ProtectedRoute>
           }
         />
 
@@ -158,9 +168,11 @@ function App() {
         <Route
           path="/program-manager/announcements"
           element={
-            <ProgramManagerLayout>
-              <Announcements />
-            </ProgramManagerLayout>
+            <ProtectedRoute allowedRoles={["program-manager", "program_manager"]}>
+              <ProgramManagerLayout>
+                <Announcements />
+              </ProgramManagerLayout>
+            </ProtectedRoute>
           }
         />
 
@@ -169,9 +181,11 @@ function App() {
         <Route
           path="/program-manager/notifications"
           element={
-            <ProgramManagerLayout>
-              <Notifications />
-            </ProgramManagerLayout>
+            <ProtectedRoute allowedRoles={["program-manager", "program_manager"]}>
+              <ProgramManagerLayout>
+                <Notifications />
+              </ProgramManagerLayout>
+            </ProtectedRoute>
           }
         />
 
@@ -180,9 +194,11 @@ function App() {
         <Route
           path="/program-manager/profile"
           element={
-            <ProgramManagerLayout>
-              <Profile />
-            </ProgramManagerLayout>
+            <ProtectedRoute allowedRoles={["program-manager", "program_manager"]}>
+              <ProgramManagerLayout>
+                <Profile />
+              </ProgramManagerLayout>
+            </ProtectedRoute>
           }
         />
 
@@ -193,36 +209,11 @@ function App() {
           element={<Logout />}
         />
 
-        {/* Program Manager Logged Out */}
+        {/* Program Manager Logged Out — extracted to LoggedOutPage component */}
 
         <Route
           path="/program-manager/logged-out"
-          element={
-            <div className="flex min-h-screen items-center justify-center bg-[#F3F6FB] px-4 py-8">
-              <div className="w-full max-w-md overflow-hidden rounded-2xl border border-white bg-white shadow-[0_20px_60px_rgba(15,23,42,0.12)]">
-                <div className="h-1 w-full bg-gradient-to-r from-red-500 via-blue-500 to-cyan-400" />
-
-                <div className="p-8 text-center sm:p-10">
-
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-green-100 bg-green-50">
-                    <span className="text-3xl font-bold text-green-500">
-                      ✓
-                    </span>
-                  </div>
-
-                  <h1 className="mt-5 text-2xl font-black text-[#172033]">
-                    Successfully Logged Out
-                  </h1>
-
-                  <p className="mt-3 text-sm leading-6 text-slate-500">
-                    You have been securely logged out from
-                    the Program Manager module.
-                  </p>
-
-                </div>
-              </div>
-            </div>
-          }
+          element={<ProgramManagerLoggedOutPage />}
         />
 
         {/* ======================================================
@@ -231,7 +222,11 @@ function App() {
 
         <Route
           path="/project-manager"
-          element={<ProjectManagerLayout />}
+          element={
+            <ProtectedRoute allowedRoles={["project-manager", "project_manager"]}>
+              <ProjectManagerLayout />
+            </ProtectedRoute>
+          }
         >
 
           {/* Dashboard */}
@@ -291,34 +286,11 @@ function App() {
           element={<ProjectManagerLogout />}
         />
 
-        {/* Project Manager Logged Out */}
+        {/* Project Manager Logged Out — extracted to LoggedOutPage component */}
 
         <Route
           path="/project-manager/logged-out"
-          element={
-            <div className="flex min-h-screen items-center justify-center bg-[#071426] px-4 py-8">
-              <div className="w-full max-w-md rounded-2xl bg-gradient-to-r from-red-500 via-blue-500 to-cyan-400 p-[1px] shadow-2xl">
-                <div className="rounded-2xl bg-[#111418] p-8 text-center sm:p-10">
-
-                  <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-green-500/20 bg-green-500/10">
-                    <span className="text-3xl font-bold text-green-400">
-                      ✓
-                    </span>
-                  </div>
-
-                  <h1 className="mt-5 text-2xl font-bold text-white">
-                    Successfully Logged Out
-                  </h1>
-
-                  <p className="mt-3 text-sm leading-6 text-slate-400">
-                    You have been securely logged out from
-                    the Project Manager module.
-                  </p>
-
-                </div>
-              </div>
-            </div>
-          }
+          element={<ProjectManagerLoggedOutPage />}
         />
 
         {/* ======================================================

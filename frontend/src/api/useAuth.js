@@ -43,20 +43,21 @@ export function useSignIn() {
 
   return useMutation({
     mutationFn: async (payload) => {
+      // Backend returns { success, token, user } at the top level — not nested under `data`
       const res = await apiClient("/api/auth/login", {
         method: "POST",
         body: JSON.stringify(payload),
       });
-      return res.data;
+      return res;
     },
-    onSuccess: (data) => {
-      if (data?.token) {
-        localStorage.setItem("msn_token", data.token);
+    onSuccess: (res) => {
+      if (res?.token) {
+        localStorage.setItem("msn_token", res.token);
       }
-      if (data?.user) {
-        localStorage.setItem("msn_user", JSON.stringify(data.user));
-        localStorage.setItem("msn_active_role", data.user.role);
-        queryClient.setQueryData(queryKeys.auth.me, data.user);
+      if (res?.user) {
+        localStorage.setItem("msn_user", JSON.stringify(res.user));
+        localStorage.setItem("msn_active_role", res.user.role);
+        queryClient.setQueryData(queryKeys.auth.me, res.user);
       }
     },
   });

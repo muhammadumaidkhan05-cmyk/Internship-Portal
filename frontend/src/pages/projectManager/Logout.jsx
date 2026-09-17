@@ -10,19 +10,12 @@ function Logout() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Remove all Project Manager session data
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("user");
-    localStorage.removeItem("userId");
+    // Clear all session keys used by this app
+    localStorage.removeItem("msn_token");
+    localStorage.removeItem("msn_user");
+    localStorage.removeItem("msn_active_role");
 
-    // IMPORTANT:
-    // Do not use "/" here because "/" currently
-    // redirects to the Program Manager dashboard.
-
-    navigate("/project-manager/logged-out", {
-      replace: true,
-    });
+    navigate("/sign-in", { replace: true });
   }, [navigate]);
 
   return (

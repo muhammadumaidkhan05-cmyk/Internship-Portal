@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSignIn } from "../../api/useAuth";
 
 const ROLES = [
   {
@@ -31,25 +30,22 @@ const ROLES = [
 
 export default function SignInPage() {
   const navigate = useNavigate();
-  const { mutate: signIn, isPending } = useSignIn();
-  const [selectedRole, setSelectedRole] = useState(null);
-  const [error, setError] = useState(null);
+  const [entering, setEntering] = useState(null);
 
-  const handleSelectRole = (role, destination) => {
-    setSelectedRole(role);
-    setError(null);
-    signIn(
-      { role },
-      {
-        onSuccess: () => {
-          navigate(destination);
-        },
-        onError: (err) => {
-          setError(err?.message || "Sign-in failed. Please try again.");
-          setSelectedRole(null);
-        },
-      }
+  const handleSelectRole = (r) => {
+    setEntering(r.role);
+
+    // Store the selected role so ProtectedRoute can read it
+    localStorage.setItem("msn_active_role", r.role);
+    localStorage.setItem(
+      "msn_user",
+      JSON.stringify({ role: r.role, name: r.label }),
     );
+
+    // Small delay for the "Entering…" feedback to be visible
+    setTimeout(() => {
+      navigate(r.destination, { replace: true });
+    }, 300);
   };
 
   return (
@@ -138,31 +134,17 @@ export default function SignInPage() {
             Select your role to access your dashboard.
           </p>
 
-          {error && (
-            <div
-              style={{
-                marginBottom: "1rem",
-                padding: "0.75rem 1rem",
-                borderRadius: "0.5rem",
-                background: "rgba(239,68,68,0.12)",
-                border: "1px solid rgba(239,68,68,0.3)",
-                color: "#FCA5A5",
-                fontSize: "0.8rem",
-              }}
-            >
-              {error}
-            </div>
-          )}
-
           <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
             {ROLES.map((r) => {
-              const isLoading = isPending && selectedRole === r.role;
+              const isEntering = entering === r.role;
+              const isDisabled = entering !== null;
+
               return (
                 <button
                   key={r.role}
                   type="button"
-                  disabled={isPending}
-                  onClick={() => handleSelectRole(r.role, r.destination)}
+                  disabled={isDisabled}
+                  onClick={() => handleSelectRole(r)}
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -170,23 +152,29 @@ export default function SignInPage() {
                     width: "100%",
                     padding: "0.875rem 1rem",
                     borderRadius: "0.75rem",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    background: "rgba(255,255,255,0.04)",
-                    cursor: isPending ? "not-allowed" : "pointer",
-                    opacity: isPending && selectedRole !== r.role ? 0.5 : 1,
+                    border: isEntering
+                      ? `1px solid ${r.color}55`
+                      : "1px solid rgba(255,255,255,0.1)",
+                    background: isEntering
+                      ? `${r.color}14`
+                      : "rgba(255,255,255,0.04)",
+                    cursor: isDisabled ? "not-allowed" : "pointer",
+                    opacity: isDisabled && !isEntering ? 0.45 : 1,
                     textAlign: "left",
                     transition: "all 0.15s ease",
                     gap: "1rem",
                   }}
                   onMouseEnter={(e) => {
-                    if (!isPending) {
+                    if (!isDisabled) {
                       e.currentTarget.style.background = "rgba(255,255,255,0.08)";
                       e.currentTarget.style.borderColor = "rgba(255,255,255,0.2)";
                     }
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.04)";
-                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
+                    if (!isEntering) {
+                      e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+                      e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
+                    }
                   }}
                 >
                   <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
@@ -228,7 +216,7 @@ export default function SignInPage() {
                       whiteSpace: "nowrap",
                     }}
                   >
-                    {isLoading ? "Entering..." : "Enter →"}
+                    {isEntering ? "Entering…" : "Enter →"}
                   </span>
                 </button>
               );

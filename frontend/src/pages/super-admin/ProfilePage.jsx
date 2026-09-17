@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useCurrentUser } from "../../api";
 import { showToast } from "../../api/client";
@@ -12,13 +12,13 @@ export default function ProfilePage() {
   const [displayName, setDisplayName] = useState(userName);
   const [email, setEmail] = useState(userEmail);
 
-  // Re-sync form when user data loads
-  const [synced, setSynced] = useState(false);
-  if (user && !synced) {
-    setDisplayName(user.name);
-    setEmail(user.email);
-    setSynced(true);
-  }
+  // Sync form fields when user data loads from the API
+  useEffect(() => {
+    if (user) {
+      setDisplayName(user.name);
+      setEmail(user.email);
+    }
+  }, [user]);
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();

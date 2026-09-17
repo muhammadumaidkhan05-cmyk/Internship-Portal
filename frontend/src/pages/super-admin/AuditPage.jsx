@@ -121,18 +121,44 @@ export default function AuditPage() {
     [],
   );
 
-  const handleExport = useCallback(() => {
-    const csv = auditLogsToCsv(logs);
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `audit-log-${new Date().toISOString().slice(0, 10)}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  }, [logs]);
+  const handleExport = useCallback(async () => {
+    try {
+      // Build params without pagination limit to get ALL matching records
+      const exportParams = new URLSearchParams();
+      exportParams.set("limit", "10000"); // high ceiling — fetch all
+      if (user) exportParams.set("user", user);
+      if (action && action !== "all") exportParams.set("action", action);
+      if (from) exportParams.set("from", from);
+      if (to) exportParams.set("to", to);
+
+      const { apiClient } = await import("../../api/client");
+      const res = await apiClient(`/api/super-admin/audit-logs?${exportParams.toString()}`);
+      const allLogs = res?.data ?? logs; // fall back to current page if request fails
+
+      const csv = auditLogsToCsv(allLogs);
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `audit-log-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      // Graceful fallback: export current page if full-fetch fails
+      const csv = auditLogsToCsv(logs);
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `audit-log-page${page}-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+  }, [logs, user, action, from, to, page]);
 
   return (
     <>
@@ -164,9 +190,9 @@ export default function AuditPage() {
                 className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-white px-3 text-sm text-[#172033] focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
               >
                 <option value="all">All actions</option>
-                {AUDIT_ACTIONS.map((a) => (
-                  <option key={a} value={a}>
-                    {ACTION_LABEL[a]}
+                {AUDIT_ACTIONS.map((auditAction) => (
+                  <option key={auditAction} value={auditAction}>
+                    {ACTION_LABEL[auditAction]}
                   </option>
                 ))}
               </select>

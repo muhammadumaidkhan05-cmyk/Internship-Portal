@@ -17,23 +17,13 @@ function Logout() {
   };
 
   const handleLogout = () => {
-    // Clear authentication/session data
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("user");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("currentUser");
+    // Clear all session keys used by this app
+    localStorage.removeItem("msn_token");
+    localStorage.removeItem("msn_user");
+    localStorage.removeItem("msn_active_role");
 
-    // Mark user as logged out
-    localStorage.setItem("isAuthenticated", "false");
-
-    // IMPORTANT:
-    // Do NOT use "/" here because "/" redirects
-    // to the Program Manager dashboard.
-    navigate("/program-manager/logged-out", {
-      replace: true,
-    });
+    // Navigate to sign-in
+    navigate("/sign-in", { replace: true });
   };
 
   return (

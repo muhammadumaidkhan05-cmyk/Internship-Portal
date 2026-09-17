@@ -11,7 +11,6 @@ import {
   IconPlus,
   IconEdit,
   IconTrash,
-  IconClose,
 } from "../../components/shared/icons";
 import {
   usePrograms,
@@ -22,6 +21,8 @@ import {
 import { showToast } from "../../api/client";
 import { PROGRAM_STATUSES } from "@msn/shared";
 import { STATUS_LABEL } from "../../lib/labels";
+import { ProgramFormModal } from "./ProgramFormModal";
+
 
 export default function ProgramsPage() {
   const [statusFilter, setStatusFilter] = useState("all");
@@ -225,6 +226,7 @@ export default function ProgramsPage() {
       <div className="flex items-center justify-between mb-5">
         <h1 className="text-2xl font-bold text-[#172033]">Programs</h1>
         <button
+          type="button"
           onClick={handleOpenCreate}
           className="inline-flex items-center gap-2 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#1D4ED8] transition-colors"
         >
@@ -287,140 +289,17 @@ export default function ProgramsPage() {
 
       {/* CREATE / EDIT MODAL */}
       {(showCreateModal || editing) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
-          <div
-            className="absolute inset-0 bg-[#0F172A]/40 backdrop-blur-sm"
-            onClick={() => {
-              setShowCreateModal(false);
-              setEditing(null);
-            }}
-          />
-          <div className="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between border-b border-[#E2E8F0] px-6 py-4">
-              <h2 className="text-lg font-bold text-[#172033]">
-                {editing ? "Edit Program" : "Create New Program"}
-              </h2>
-              <button
-                onClick={() => {
-                  setShowCreateModal(false);
-                  setEditing(null);
-                }}
-                className="rounded-full p-2 text-[#64748B] hover:bg-[#F1F5F9] transition-colors"
-              >
-                <IconClose size={18} />
-              </button>
-            </div>
-            <form onSubmit={handleSubmit} className="p-6">
-              <div className="space-y-4">
-                <div>
-                  <label className="mb-1 block text-sm font-semibold text-[#334155]">
-                    Program Name *
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData((p) => ({ ...p, name: e.target.value }))
-                    }
-                    className="w-full rounded-lg border border-[#E2E8F0] px-3 py-2 text-sm focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
-                    placeholder="e.g. Summer 2026 Engineering"
-                  />
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm font-semibold text-[#334155]">
-                    Program Manager *
-                  </label>
-                  <input
-                    required
-                    type="text"
-                    value={formData.manager}
-                    onChange={(e) =>
-                      setFormData((p) => ({ ...p, manager: e.target.value }))
-                    }
-                    className="w-full rounded-lg border border-[#E2E8F0] px-3 py-2 text-sm focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
-                    placeholder="e.g. John Doe"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="mb-1 block text-sm font-semibold text-[#334155]">
-                      Cohort Size
-                    </label>
-                    <input
-                      type="number"
-                      min={0}
-                      value={formData.size}
-                      onChange={(e) =>
-                        setFormData((p) => ({
-                          ...p,
-                          size: Number(e.target.value),
-                        }))
-                      }
-                      className="w-full rounded-lg border border-[#E2E8F0] px-3 py-2 text-sm focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-1 block text-sm font-semibold text-[#334155]">
-                      Progress (%)
-                    </label>
-                    <input
-                      type="number"
-                      min={0}
-                      max={100}
-                      value={formData.progress}
-                      onChange={(e) =>
-                        setFormData((p) => ({
-                          ...p,
-                          progress: Number(e.target.value),
-                        }))
-                      }
-                      className="w-full rounded-lg border border-[#E2E8F0] px-3 py-2 text-sm focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm font-semibold text-[#334155]">
-                    Status
-                  </label>
-                  <select
-                    value={formData.status}
-                    onChange={(e) =>
-                      setFormData((p) => ({ ...p, status: e.target.value }))
-                    }
-                    className="w-full rounded-lg border border-[#E2E8F0] px-3 py-2 text-sm focus:border-[#2563EB] focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20"
-                  >
-                    {PROGRAM_STATUSES.map((s) => (
-                      <option key={s} value={s}>
-                        {STATUS_LABEL[s] ?? s}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="mt-8 flex items-center justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowCreateModal(false);
-                    setEditing(null);
-                  }}
-                  className="rounded-lg px-4 py-2 text-sm font-semibold text-[#475569] hover:bg-[#F1F5F9] transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isCreating || isUpdating}
-                  className="rounded-lg bg-[#2563EB] px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[#1D4ED8] disabled:opacity-50 transition-colors"
-                >
-                  {isCreating || isUpdating ? "Saving..." : "Save Program"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <ProgramFormModal
+          formData={formData}
+          onFormDataChange={setFormData}
+          onSubmit={handleSubmit}
+          onClose={() => {
+            setShowCreateModal(false);
+            setEditing(null);
+          }}
+          isEditing={!!editing}
+          isSaving={isCreating || isUpdating}
+        />
       )}
 
       {/* DELETE CONFIRMATION MODAL */}
@@ -439,3 +318,4 @@ export default function ProgramsPage() {
     </>
   );
 }
+

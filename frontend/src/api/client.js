@@ -87,9 +87,9 @@ export async function apiClient(endpoint, options = {}) {
 
     const data = await response.json();
 
-    if (!response.ok || data.ok === false) {
+    if (!response.ok || data.success === false) {
       throw new ApiError(
-        data.error || "An error occurred",
+        data.message || data.error || "An error occurred",
         response.status,
         data,
       );
