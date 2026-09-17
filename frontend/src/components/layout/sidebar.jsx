@@ -41,7 +41,7 @@ export function Sidebar({
         className={`
           fixed inset-y-0 left-0 z-40 flex flex-col bg-sidebar text-white
           transition-[transform,width] duration-200 ease-out
-          lg:sticky lg:top-0 lg:h-screen lg:translate-x-0
+          lg:sticky lg:top-0 lg:h-screen lg:self-start lg:translate-x-0
           ${open ? "translate-x-0" : "-translate-x-full"}
           ${collapsed ? "lg:w-[68px]" : "lg:w-64"}
           w-64

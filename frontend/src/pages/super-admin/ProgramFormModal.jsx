@@ -23,18 +23,17 @@ export function ProgramFormModal({
   isSaving,
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-[#0F172A]/40 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      {/* Modal panel */}
-      <div className="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-        <div className="flex items-center justify-between border-b border-[#E2E8F0] px-6 py-4">
-          <h2 className="text-lg font-bold text-[#172033]">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={isEditing ? "Edit Program" : "Create Program"}
+      className="fixed inset-0 z-50 grid place-items-center bg-black/40 px-4 py-8 animate-in fade-in duration-200"
+    >
+      <div className="flex max-h-full w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-2xl animate-in fade-in zoom-in-95 slide-in-from-bottom-4 sm:slide-in-from-bottom-0 duration-200">
+        <div className="flex items-center justify-between border-b border-[#E2E8F0] bg-[#F8FAFC] px-5 py-4">
+          <h3 className="text-sm font-semibold text-[#172033]">
             {isEditing ? "Edit Program" : "Create New Program"}
-          </h2>
+          </h3>
           <button
             type="button"
             onClick={onClose}

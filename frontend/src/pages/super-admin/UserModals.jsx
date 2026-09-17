@@ -12,9 +12,9 @@ export function EditRoleModal({ user, role, onRoleChange, onSave, onCancel, isSa
       role="dialog"
       aria-modal="true"
       aria-label={`Edit role for ${user.name}`}
-      className="fixed inset-0 z-50 grid place-items-center bg-black/40 px-4"
+      className="fixed inset-0 z-50 grid place-items-center bg-black/40 px-4 animate-in fade-in duration-200"
     >
-      <div className="w-full max-w-md overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-2xl">
+      <div className="w-full max-w-md overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-2xl animate-in fade-in zoom-in-95 slide-in-from-bottom-4 sm:slide-in-from-bottom-0 duration-200">
         <div className="border-b border-[#E2E8F0] bg-[#F8FAFC] px-5 py-3">
           <h3 className="text-sm font-semibold text-[#172033]">
             Edit Role — {user.name}
@@ -71,11 +71,11 @@ export function CreateUserModal({ onSubmit, onClose, isCreating, name, email, ro
       role="dialog"
       aria-modal="true"
       aria-label="Create new user"
-      className="fixed inset-0 z-50 grid place-items-center bg-black/40 px-4"
+      className="fixed inset-0 z-50 grid place-items-center bg-black/40 px-4 animate-in fade-in duration-200"
     >
-      <div className="w-full max-w-md overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-2xl">
+      <div className="w-full max-w-md overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-2xl animate-in fade-in zoom-in-95 slide-in-from-bottom-4 sm:slide-in-from-bottom-0 duration-200">
         <div className="flex items-center justify-between border-b border-[#E2E8F0] bg-[#F8FAFC] px-5 py-3">
-          <h3 className="text-sm font-semibold text-[#172033]">Add New User</h3>
+          <h3 className="text-sm font-semibold text-[#172033]">Create New User</h3>
           <button
             type="button"
             onClick={onClose}

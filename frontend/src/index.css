@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "tailwindcss-animate";
 
 @theme {
   /* Brand palette - MSN Academy | IMP (Ported from super-admin) */
@@ -454,36 +455,45 @@ select {
 }
 
 /* =========================================================
-   PREMIUM INPUT
+   PREMIUM INPUT & SELECT DROPDOWN
    ========================================================= */
 
-.premium-input {
+.premium-input, select {
   border: 1px solid rgba(148, 163, 184, 0.3);
-
-  background: #ffffff;
-
+  background-color: #ffffff;
   color: #172033;
-
   transition:
     border-color 0.25s ease,
     box-shadow 0.25s ease,
-    background 0.25s ease;
+    background-color 0.25s ease,
+    transform 0.1s ease;
 }
 
 .premium-input::placeholder {
   color: #94a3b8;
 }
 
-.premium-input:focus {
+.premium-input:focus, select:focus {
   border-color: rgba(37, 99, 235, 0.65);
-
-  background: #ffffff;
-
+  background-color: #ffffff;
   box-shadow:
     0 0 0 3px rgba(37, 99, 235, 0.08),
     0 8px 20px rgba(37, 99, 235, 0.06);
-
   outline: none;
+}
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1em;
+  padding-right: 2.5rem;
+}
+
+select:hover {
+  border-color: rgba(37, 99, 235, 0.4);
+  background-color: #f8fafc;
 }
 
 /* =========================================================

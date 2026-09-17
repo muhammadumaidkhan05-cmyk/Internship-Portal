@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import { Sidebar } from "./sidebar";
 import { Navbar } from "./navbar";
 import { useSignOut } from "../../api/useAuth";
@@ -14,6 +15,8 @@ function getInitialCollapsed() {
 }
 
 export function AppShell({ navItems, bottomItems, navbar, children }) {
+  const location = useLocation();
+
   // Mobile: open/close drawer
   const [open, setOpen] = useState(false);
   // Desktop: collapse to icon rail — persisted across refreshes
@@ -75,7 +78,14 @@ export function AppShell({ navItems, bottomItems, navbar, children }) {
           onToggleCollapse={handleToggleCollapse}
         />
 
-        <main className="flex-1 px-4 py-5 sm:px-6 sm:py-6">{children}</main>
+        {/* Adding key={location.pathname} forces React to remount the main content
+            on route change, triggering the premium-page animation (fade & slide up) */}
+        <main
+          key={location.pathname}
+          className="premium-page flex-1 px-4 py-5 sm:px-6 sm:py-6"
+        >
+          {children}
+        </main>
       </div>
     </div>
   );
